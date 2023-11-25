@@ -20,42 +20,42 @@ func TestKustomization_CheckDeprecatedFields(t *testing.T) {
 	tests := []struct {
 		name string
 		k    Kustomization
-		want *[]string
+		want []string
 	}{
 		{
 			name: "using_bases",
 			k: Kustomization{
 				Bases: []string{"base"},
 			},
-			want: &[]string{deprecatedBaseWarningMessage},
+			want: []string{deprecatedBaseWarningMessage},
 		},
 		{
 			name: "using_ImageTags",
 			k: Kustomization{
 				ImageTags: []Image{},
 			},
-			want: &[]string{deprecatedImageTagsWarningMessage},
+			want: []string{deprecatedImageTagsWarningMessage},
 		},
 		{
 			name: "usingPatchesJson6902",
 			k: Kustomization{
 				PatchesJson6902: []Patch{},
 			},
-			want: &[]string{deprecatedPatchesJson6902Message},
+			want: []string{deprecatedPatchesJson6902Message},
 		},
 		{
 			name: "usingPatchesStrategicMerge",
 			k: Kustomization{
 				PatchesStrategicMerge: []PatchStrategicMerge{},
 			},
-			want: &[]string{deprecatedPatchesStrategicMergeMessage},
+			want: []string{deprecatedPatchesStrategicMergeMessage},
 		},
 		{
 			name: "usingVar",
 			k: Kustomization{
 				Vars: []Var{},
 			},
-			want: &[]string{deprecatedVarsMessage},
+			want: []string{deprecatedVarsMessage},
 		},
 		{
 			name: "usingAll",
@@ -66,7 +66,7 @@ func TestKustomization_CheckDeprecatedFields(t *testing.T) {
 				PatchesStrategicMerge: []PatchStrategicMerge{},
 				Vars:                  []Var{},
 			},
-			want: &[]string{
+			want: []string{
 				deprecatedBaseWarningMessage,
 				deprecatedImageTagsWarningMessage,
 				deprecatedPatchesJson6902Message,

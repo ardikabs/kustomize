@@ -36,6 +36,8 @@ type KustTarget struct {
 	rFactory      *resmap.Factory
 	pLdr          *loader.Loader
 	origin        *resource.Origin
+
+	disableDeprecationWarningMessage bool
 }
 
 // NewKustTarget returns a new instance of KustTarget.
@@ -43,13 +45,20 @@ func NewKustTarget(
 	ldr ifc.Loader,
 	validator ifc.Validator,
 	rFactory *resmap.Factory,
-	pLdr *loader.Loader) *KustTarget {
-	return &KustTarget{
+	pLdr *loader.Loader,
+	opts ...Option) *KustTarget {
+	kt := &KustTarget{
 		ldr:       ldr,
 		validator: validator,
 		rFactory:  rFactory,
 		pLdr:      pLdr.LoaderWithWorkingDir(ldr.Root()),
 	}
+
+	for _, opt := range opts {
+		opt(kt)
+	}
+
+	return kt
 }
 
 // Load attempts to load the target's kustomization file.
@@ -64,9 +73,9 @@ func (kt *KustTarget) Load() error {
 		return err
 	}
 
-	// show warning message when using deprecated fields.
-	if warningMessages := k.CheckDeprecatedFields(); warningMessages != nil {
-		for _, msg := range *warningMessages {
+	// show warning message when using deprecated fields if not disabled
+	if !kt.disableDeprecationWarningMessage {
+		for _, msg := range k.CheckDeprecatedFields() {
 			fmt.Fprintf(os.Stderr, "%v\n", msg)
 		}
 	}

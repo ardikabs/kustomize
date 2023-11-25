@@ -191,7 +191,7 @@ const (
 )
 
 // CheckDeprecatedFields check deprecated field is used or not.
-func (k *Kustomization) CheckDeprecatedFields() *[]string {
+func (k *Kustomization) CheckDeprecatedFields() []string {
 	var warningMessages []string
 	if k.Bases != nil {
 		warningMessages = append(warningMessages, deprecatedBaseWarningMessage)
@@ -208,7 +208,7 @@ func (k *Kustomization) CheckDeprecatedFields() *[]string {
 	if k.Vars != nil {
 		warningMessages = append(warningMessages, deprecatedVarsMessage)
 	}
-	return &warningMessages
+	return warningMessages
 }
 
 // FixKustomization fixes things
